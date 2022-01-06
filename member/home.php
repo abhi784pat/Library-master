@@ -3,7 +3,7 @@
 	require "../message_display.php";
 	require "verify_member.php";
 	require "header_member.php";
-	$conn = Connect();
+	$conn=Connect()
 ?>
 
 <html>
@@ -67,7 +67,6 @@
 					echo error_without_field("Please select a book to issue");
 				else
 				{
-					
 					$query = $conn->prepare("SELECT copies FROM book WHERE isbn = ?;");
 					$query->bind_param("s", $_POST['rd_book']);
 					$query->execute();
@@ -110,15 +109,15 @@
 									$bookPrice = mysqli_fetch_array($query->get_result())[0];
 									if($memberBalance < $bookPrice)
 										echo error_without_field("You do not have sufficient balance to issue this book");
-									// else
-									// {
-									// 	$query = $conn->prepare("INSERT INTO pending_book_requests(member, book_isbn) VALUES(?, ?);");
-									// 	$query->bind_param("ss", $_SESSION['username'], $_POST['rd_book']);
-									// 	if(!$query->execute())
-									// 		echo error_without_field("ERROR: Couldn\'t request book");
-									// 	else
-									// 		echo success("Book successfully requested. You will be notified by email when the book is issued to your account");
-									// }
+									else
+									{
+										$query = $conn->prepare("INSERT INTO pending_book_requests(member, book_isbn) VALUES(?, ?);");
+										$query->bind_param("ss", $_SESSION['username'], $_POST['rd_book']);
+										if(!$query->execute())
+											echo error_without_field("ERROR: Couldn\'t request book");
+										else
+											echo success("Book successfully requested. You will be notified by email when the book is issued to your account");
+									}
 								}
 							}
 						}
